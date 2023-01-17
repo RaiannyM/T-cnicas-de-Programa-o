@@ -1,0 +1,57 @@
+# depslib dependency file v1.0
+1673828079 source:/home/mirelle/Documents/BTreev5/charserial.cpp
+	"charserial.h"
+	<iostream>
+	"charserial.h"
+	<iostream>
+
+1673445055 /home/mirelle/Documents/BTreev5/charserial.h
+	"serializable.h"
+	"serializable.h"
+
+1673445426 /home/mirelle/Documents/BTreev5/serializable.h
+	<string>
+
+1673444841 source:/home/mirelle/Documents/BTreev5/header.cpp
+	"header.h"
+
+1673829713 /home/mirelle/Documents/BTreev5/header.h
+	"serializable.h"
+
+1673444564 source:/home/mirelle/Documents/BTreev5/main.cpp
+	<iostream>
+	"btree.h"
+	"charserial.h"
+	<clocale>
+
+1673829867 /home/mirelle/Documents/BTreev5/btree.h
+	<iostream>
+	<string>
+	<vector>
+	"typedfile.h"
+	"node.h"
+	"record.h"
+
+1673915473 /home/mirelle/Documents/BTreev5/typedfile.h
+	<fstream>
+	<type_traits>
+	"record.h"
+	"header.h"
+
+1673829651 /home/mirelle/Documents/BTreev5/record.h
+	<string>
+	"serializable.h"
+	"node.h"
+
+1673829824 /home/mirelle/Documents/BTreev5/node.h
+	<iostream>
+	<vector>
+	"serializable.h"
+
+1673828098 source:/home/mirelle/Documents/BTreev5/serialCurrency.cpp
+	"serialCurrency.h"
+	<iostream>
+
+1673827900 /home/mirelle/Documents/BTreev5/serialCurrency.h
+	"serializable.h"
+
