@@ -14,15 +14,21 @@ template <class T, const unsigned int MIN_DEGREE>
 class btree : private typedFile <T, MIN_DEGREE>{
     protected:
         node<T, MIN_DEGREE> root;
+        int searchAux(node<T, MIN_DEGREE> rec, T key); // Método que irá auxiliar na busca
+        void printAux(node<T, MIN_DEGREE> x, vector<string> &v, unsigned int lvl); // Método que irá auxiliar na impressão da árvore
     public:
-        btree();
-        btree(const string new_name, const string new_type, const unsigned int new_version);
-        virtual ~btree();
-        void setRoot(node<T, MIN_DEGREE> new_root);
-        node<T, MIN_DEGREE> getRoot() const;
-        bool insertKey(T key);
-        bool insertNonFull(node<T, MIN_DEGREE>& node, T key, unsigned int index);
-        bool remove(T key);
+        btree(); // Construtor padrão
+        btree(const string new_name, const string new_type, const unsigned int new_version); // Construtor paramétrico
+        virtual ~btree(); // Destrutor
+        void setRoot(node<T, MIN_DEGREE> new_root); // Modificador do atributo root
+        node<T, MIN_DEGREE> getRoot() const; // Acessor do atributo root
+        void close(); // Método que irá fechar o arquivo
+        bool isOpen(); // Método que irá verificar se o arquivo foi aberto
+        void print(); // Método que irá imprimir a árvore
+        int search(T key); // Método que irá realizar a procura de uma chave na árvore
+        bool insertKey(T key); // Método que realiza a inserção da chave em uma página da árvore
+        bool insertNonFull(node<T, MIN_DEGREE>& node, T key, unsigned int index); // Método que auxilia na inserção
+        bool remove(T key); // Método que realiza a remoção de uma chave em uma página da árvore
         bool removeAux(node<T, MIN_DEGREE> x, T key, unsigned int indexOfX);
         bool removeFromLeaf(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
         bool removeFromNonLeaf(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
@@ -31,13 +37,7 @@ class btree : private typedFile <T, MIN_DEGREE>{
         bool goDownAndOrganize(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
         void merge(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
         void rotateKey(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX, bool direction);
-        void print();
-        bool search(T key);
-        bool searchAux(node<T, MIN_DEGREE> rec, T key);
-        void close();
-        bool isOpen();
         unsigned int hasKey(node<T, MIN_DEGREE> x, T key);
-        void printAux(node<T, MIN_DEGREE> x, vector<string> &v, unsigned int lvl);
         node<T, MIN_DEGREE> readNode(unsigned int i);
         bool insertRoot(node<T, MIN_DEGREE> new_node);
         bool writeNode(node<T, MIN_DEGREE> x, unsigned long long int index, bool recent);
@@ -45,23 +45,23 @@ class btree : private typedFile <T, MIN_DEGREE>{
         bool deleteNode(node<T, MIN_DEGREE> n, unsigned int i);
 };
 
-template <class T, const unsigned int MIN_DEGREE>
-btree<T, MIN_DEGREE>::btree():typedFile<T, MIN_DEGREE>::typedFile(){ // Construtor padrão
+template <class T, const unsigned int MIN_DEGREE> // Construtor padrão
+btree<T, MIN_DEGREE>::btree():typedFile<T, MIN_DEGREE>::typedFile(){
     setRoot(readNode(typedFile<T, MIN_DEGREE>::getFirstValid())); // O nó será a raíz da árvore
 }
 
-template <class T, const unsigned int MIN_DEGREE>
+template <class T, const unsigned int MIN_DEGREE> // Construtor paramétrico
 btree<T, MIN_DEGREE>::btree(const string new_name, const string new_type, const unsigned int new_version):typedFile<T, MIN_DEGREE>(new_name, new_type, new_version){
     setRoot(readNode(typedFile<T, MIN_DEGREE>::getFirstValid()));
 }
 
-template <class T, const unsigned int MIN_DEGREE>
+template <class T, const unsigned int MIN_DEGREE> // Método que irá verificar se o arquivo foi aberto
 bool btree<T, MIN_DEGREE>::isOpen(){
     return typedFile<T, MIN_DEGREE>::isOpen();
 }
 
 template <class T, const unsigned int MIN_DEGREE>
-void btree<T, MIN_DEGREE>::close(){
+void btree<T, MIN_DEGREE>::close(){ // Método que irá fechar o arquivo
     typedFile<T, MIN_DEGREE>::close();
 }
 
@@ -73,66 +73,38 @@ node<T, MIN_DEGREE> btree<T, MIN_DEGREE>::readNode(unsigned int index){
 
     return rec.getData();
 }
-/*
-template <class T, const unsigned int MIN_DEGREE>
-bool btree<T, MIN_DEGREE>::search(T key){
-    node<T, MIN_DEGREE> root, SearchedNode;
-
-    unsigned int aux = 0; // Variável que irá auxiliar na busca da chave
-
-    root = getRoot();
-
-    while (aux < root.getSize() && key > root.getKey(aux)){
-        aux++; // Aux continuará sendo incrementada até encontrarmos uma chave maior que à que buscamos
-    }
-
-    if(root.getKey(aux) == key){
-        return true; // Chave foi encontrada!
-    } else{
-            if(root.isLeaf()){
-                return false; // Chave não foi encontrada e como a página é folha, a pesquisa é encerrada!
-            } else{
-                root = readNode(root.getChild(aux)); // Se não for folha, continuaremos
-                                                                        // com a busca, buscaremos o filho
-                                                                        // de SearchedNode e recomeçamos o
-                                                                        // procedimento
-
-                return search(key);
-            }
-    }
-}
-*/
 
 template <class T, const unsigned int MIN_DEGREE>
-bool btree<T, MIN_DEGREE>::search(T key){
-    node<T, MIN_DEGREE> rec;
+int btree<T, MIN_DEGREE>::search(T key){ // Método que realiza a busca por uma chave
+    node<T, MIN_DEGREE> rec; // Nó auxiliar que irá guardar a raíz
 
     rec = getRoot();
 
-    if(rec.getSize() != 0)
-        return searchAux(rec, key);
-    else
-        return false;
+    return searchAux(rec, key);
 }
 
 template <class T, const unsigned int MIN_DEGREE>
-bool btree<T, MIN_DEGREE>::searchAux(node<T, MIN_DEGREE> rec, T key){
-    unsigned int i = 0;
-    node<T, MIN_DEGREE> aux;
+int btree<T, MIN_DEGREE>::searchAux(node<T, MIN_DEGREE> rec, T key){ // Método auxiliar na busca pela chave
+    unsigned int i = 0; // Variável auxiliar que irá armazenar temporariamente índices durante a busca
+    node<T, MIN_DEGREE> aux; // Nó auxiliar que irá armazenar temporariamente nós durante a busca
 
-    while(i < rec.getSize() && key > rec.getKey(i)){
-        i++;
+    while(i < rec.getSize() && key > rec.getKey(i)){ // Buscando na página atual para descobrir se a chave key está presente
+        i++;                                         // Enquanto a chave a ser procurada for maior que a chave do registro,
+                                                     // a variável i será incrementada
     }
+    // Laço de repetição para quando é encontrada no registro uma chave maior em relação a procurada
+    if(i < rec.getSize() && rec.getKey(i) == key) // A chave do registro é igual a procurada?
+        return i; // Se sim, devolva a sua posição
+    else{
+        if(rec.isLeaf()){ // Caso não seja e a página seja folha
+            rec = NULL;
+            return -1; // A chave não está presente na árvore
+        }else{ // Caso a página não seja folha, a busca pela chave continua....
+            aux = readNode(rec.getChild(i));
 
-    if(rec.getKey(i) == key)
-        return true;
-
-    if(rec.isLeaf())
-        return false;
-
-    aux = readNode(rec.getChild(i));
-
-    return searchAux(aux, key);
+            return searchAux(aux, key);
+        }
+    }
 }
 
 template <class T, const unsigned int MIN_DEGREE>
@@ -297,48 +269,51 @@ bool btree<T, MIN_DEGREE>::writeNode(node<T, MIN_DEGREE> x, unsigned long long i
 }
 
 template <class T, const unsigned int MIN_DEGREE>
-void btree<T, MIN_DEGREE>::print(){
-    int lvl = 0;
+void btree<T, MIN_DEGREE>::print(){ // Método que irá imprimir a árvore
+    int lvl; // Variável auxiliar que irá melhorar a visualização da árvore de acordo com o nível para o usuário
+
+    lvl = 0;
 
     vector<string> levels(1);
-    printAux(root, levels, lvl);
+    printAux(root, levels, lvl); // A árvore será percorrida e suas chaves salvas no vetor levels de acordo
+                                 // com o nível da página em que elas se encontram
 
-    for(string s : levels){
+    for(string s : levels){ // O que está armazenado no vetor levels é atribuído ao objeto s de acordo com o nível
         cout << s << endl;
     }
 }
 
-template <class T, const unsigned int MIN_DEGREE>
+template <class T, const unsigned int MIN_DEGREE> // Método que irá auxiliar na impressão da árvore
 void btree<T, MIN_DEGREE>::printAux(node<T, MIN_DEGREE> x, vector<string> &v, unsigned int lvl){
-    string str = "[";
-    unsigned int i = 0;
+    string auxStr = "["; // objeto auxStr irá armazenar as chaves enquanto a árvore é percorrida é inicializado
+    unsigned int i = 0; // Variável auxiliar que irá armazenar índices durante a impressão
 
-    if(v.size() < lvl + 1){
+    if(v.size() < lvl + 1){ // Se o nível mudou, o vetor v é redimensionado
         v.resize(lvl + 1);
     }
 
-    if(!x.isLeaf()){
-        for(i = 0; i <= x.getSize(); i++){
+    if(!x.isLeaf()){ // Se x não for folha ...
+        for(i = 0; i <= x.getSize(); i++){ // Seus filhos são visitados
             if(x.getChild(i) != x.NOT_FOUND){
                 node<T, MIN_DEGREE> aux;
 
                 aux = readNode(x.getChild(i));
-                printAux(aux, v, lvl+1);
+                printAux(aux, v, lvl+1); // Chamada recursiva a printAux aumentando o nível em uma unidade
             }
         }
     }
 
     for(i = 0; i < x.getSize(); i++){
-        str += (x.getKey(i).getValue()) + ", ";
+        auxStr += (x.getKey(i).getValue()) + ", "; // Todas as chaves são armazenadas em auxStr
     }
 
-    if(str.length() > 1){
-        str += "\b\b]";
+    if(auxStr.length() > 1){ // auxStr é organizada
+        auxStr += "\b\b]";
     } else{
-        str += "]";
+        auxStr += "]";
     }
 
-    v[lvl] += str;
+    v[lvl] += auxStr; // A cada chamada recursiva, o nível de v é incrementado
 }
 
 template <class T, const unsigned int MIN_DEGREE>
