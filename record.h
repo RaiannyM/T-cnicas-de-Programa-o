@@ -1,4 +1,3 @@
-
 #ifndef RECORD_H_INCLUDED
 #define RECORD_H_INCLUDED
 
@@ -157,4 +156,5 @@ template <class T, const unsigned int MIN_DEGREE>
 unsigned long long int record<T, MIN_DEGREE>::size() const{ // Calcula o tamanho de record
     return data.size() + sizeof(deleted) + sizeof(next);
 }
+
 #endif // RECORD_H_INCLUDED

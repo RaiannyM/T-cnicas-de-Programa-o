@@ -421,4 +421,5 @@ void typedFile<T, MIN_DEGREE>::setFirstValid(unsigned long long int index){
     head.setRoot(index);
     writeHeader(head);
 }
+
 #endif // TYPEDFILE_H_INCLUDED

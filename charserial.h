@@ -38,9 +38,7 @@ class charserial : serializable {
 
 /*#ifndef CHARSERIAL_H_INCLUDED
 #define CHARSERIAL_H_INCLUDED
-
 #include "serializable.h"
-
 class charserial : serializable {
     public:
         charserial();
@@ -69,5 +67,4 @@ class charserial : serializable {
     protected:
         char value;
 };
-
 #endif // CHARSERIAL_H_INCLUDED*/

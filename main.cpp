@@ -12,6 +12,7 @@ int main()
     btree<charserial, 3> disk("file.dat", "DTB", 3);
     char vetorpraInserir[20] = {')', '6', 'O', 'b', 'L', 'G', 'P', 'C', '3', '%', 'm', '(', 'H', 'W', 'Y', '&', 'k', '1', 'X', '-'};
     char vetorpraRemover[10] = {'C', 'm', '1', 'O', ')', 'W', 'Y', 'L', 'X', '('};
+
     charserial caractere;
     char valor;
     string op;
@@ -56,7 +57,7 @@ int main()
                     cout << "Digite um caractere: ";
                     cin >> valor;
                     caractere.setValue(valor);
-                    if(disk.search(caractere) >=0){
+                    if(disk.search(caractere) >= 0){
                         cout << "O valor " << valor << " foi encontrado na árvore " << endl;
                     }else{
                         cout << "O valor " << valor << " não foi encontrado na árvore " << endl;

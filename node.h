@@ -1,4 +1,3 @@
-
 #ifndef NODE_H_INCLUDED
 #define NODE_H_INCLUDED
 
@@ -181,11 +180,9 @@ node<T, MIN_DEGREE> node <T, MIN_DEGREE>::operator=(const node<T, MIN_DEGREE>& o
     if(this == &other){
        return *this;
     }
-
     for(int i = 0; i < other.children.size(); i++){
         children[i] = other.getChild(i);
     }
-
     for(int i = 0; i < other.keys.size(); i++){
         keys[i] = other.getKeys(i);
     }
@@ -220,4 +217,5 @@ template <class T, const unsigned int MIN_DEGREE>
 void node<T, MIN_DEGREE>::setLeaf(bool n_leaf){
     leaf = n_leaf;
 }
+
 #endif // NODE_H_INCLUDED
