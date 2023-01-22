@@ -2,6 +2,7 @@
 #define SERIALCURRENCY_H_INCLUDED
 
 #include "serializable.h"
+#include <iomanip>
 
 class serialcurrency : serializable{
     protected:
@@ -9,12 +10,12 @@ class serialcurrency : serializable{
         double fracPart; // fracPart é o atributo que refere-se a parte fracionária do valor
     public:
         serialcurrency(); // Construtor padrão
-        serialcurency(double value); // Construtor paramétrico
+        serialcurrency(double value, double value2); // Construtor paramétrico
         serialcurrency(const serialcurrency& other); // Construtor de cópia
         virtual ~serialcurrency(); // Destrutor
         serialcurrency operator=(const serialcurrency& other); // Sobrecarga do operador =
         bool operator==(const serialcurrency &other) const; // Sobrecarga do operador ==
-        bool operator<(const serialcurency &other) const; // Sobrecarga do operador <
+        bool operator<(const serialcurrency &other) const; // Sobrecarga do operador <
         bool operator<=(const serialcurrency &other) const; // Sobrecarga do operador <=
         bool operator>(const serialcurrency &other) const; // Sobrecarga do operador >
         bool operator>=(const serialcurrency &other) const; // Sobrecarga do operador >=
@@ -22,10 +23,13 @@ class serialcurrency : serializable{
         void setIntPart(double newIntPart); // Modificador do atributo x
         double getIntPart() const; // Acessor do atributo x
         void setFracPart(double newFracPart); // Modificador do atributo y
-        float getFracPart() const; // Acessor do atributo y
+        double getFracPart() const; // Acessor do atributo y
         virtual string toString(); // Serialização
         virtual void fromString(string repr); // Desserialização
-        friend ostream& operator<<(ostream& os, serialcurrency &sc); // Sobrecarga do operador <<
+        friend ostream& operator<<(ostream& os, serialcurrency &sc){ // Sobrecarga do operador <<
+            os << fixed << setprecision(2) << sc.intPart + sc.fracPart;
+            return os;
+        }
         // *** Não implementados
         virtual string toXML(){ return ""; };
         virtual void fromXML(string repr){};

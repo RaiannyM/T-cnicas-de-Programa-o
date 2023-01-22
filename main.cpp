@@ -1,6 +1,7 @@
 #include <iostream>
 #include "btree.h"
 #include "charserial.h"
+#include "serialcurrency.h"
 #include <clocale>
 
 using namespace std;
@@ -55,10 +56,10 @@ int main()
                     cout << "Digite um caractere: ";
                     cin >> valor;
                     caractere.setValue(valor);
-                    if(disk.search(caractere)){
-                        cout << "Valor encontrado" << endl;
+                    if(disk.search(caractere) >=0){
+                        cout << "O valor " << valor << " foi encontrado na árvore " << endl;
                     }else{
-                        cout << "Valor não encontrado" << endl;
+                        cout << "O valor " << valor << " não foi encontrado na árvore " << endl;
                     }
                     break;
                 case 4:

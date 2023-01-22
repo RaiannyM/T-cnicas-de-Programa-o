@@ -10,7 +10,7 @@ serialcurrency::serialcurrency() : serializable(){ // Construtor padrão
     fracPart = 0;
 }
 
-serialcurrency::serialcurrency(double value) : serializable(){ // Construtor paramétrico
+serialcurrency::serialcurrency(double value, double value2) : serializable(){ // Construtor paramétrico
     double aux;
 
     aux = modf(value, &intPart);
@@ -27,8 +27,8 @@ serialcurrency::~serialcurrency(){ // Destrutor
 
 }
 
-serialcurrency serialcurrency:::operator=(const serialcurrency& other){ // Sobrecarga do operador =
-    serialCurrency aux(other);
+serialcurrency serialcurrency::operator=(const serialcurrency& other){ // Sobrecarga do operador =
+    serialcurrency aux(other);
 
     if(this == &other){
         return *this;
@@ -88,11 +88,6 @@ bool serialcurrency::operator!=(const serialcurrency &other) const{
     }
 }
 
-friend ostream& operator<<(ostream& os, serialcurrency &sc){
-    os << fixed << setprecision(2) << sc.intPart + sc.fracPart;
-    return os;
-}
-
 void serialcurrency::setIntPart(double newIntPart){ // Modificador do atributo intPart
     intPart = newIntPart;
 }
@@ -119,16 +114,16 @@ double serialcurrency::getFracPart() const{
 string serialcurrency::toString(){ // Serialização
     string repr = "";
 
-    repr += string(reintepret_cast<char*>(&intPart). sizeof(intPart));
+    repr += string(reinterpret_cast<char*>(&intPart), sizeof(intPart));
     repr += string(reinterpret_cast<char*>(&fracPart), sizeof(fracPart));
 
     return repr;
 }
 
-void serialcurrency::fromString(){ // Serialização
+void serialcurrency::fromString(string repr){ // Serialização
     int pos = 0;
 
-    repr.copy(reintepret_cast<char*>(&intPart), sizeof(intPart), pos);
+    repr.copy(reinterpret_cast<char*>(&intPart), sizeof(intPart), pos);
     pos += sizeof(intPart);
     repr.copy(reinterpret_cast<char*>(&fracPart), sizeof(fracPart), pos);
 }
