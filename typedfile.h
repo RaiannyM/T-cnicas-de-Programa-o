@@ -269,12 +269,6 @@ bool typedFile<T, MIN_DEGREE>::deletefromRightNeighbor(unsigned long long int in
 
     return  true;
 }
-/*
-template <class T, const unsigned int MIN_DEGREE>
-unsigned long long int typedFile<T, MIN_DEGREE>::getRoot(){
-    return head.getRoot();
-}
-*/
 
 template <class T, const unsigned int MIN_DEGREE>
 unsigned long long int typedFile<T, MIN_DEGREE>::getFirstValid(){

@@ -10,7 +10,7 @@ serialcurrency::serialcurrency() : serializable(){ // Construtor padrão
     fracPart = 0;
 }
 
-void serialcurrency::setSerialCurrency(double value){ // Construtor paramétrico
+serialcurrency::serialcurrency(double value){ // Construtor paramétrico
     double aux;
 
     aux = modf(value, &intPart);
@@ -97,13 +97,11 @@ double serialcurrency::getIntPart() const{ // Acessor do atributo intPart
 }
 
 void serialcurrency::setFracPart(double newFracPart){; // Modificador do atributo fracPart
-    if(newFracPart >= 0.100){
-        double hundreds;
-        hundreds = newFracPart/100;
-        intPart = intPart + int(hundreds);
-        fracPart = newFracPart - int(hundreds)*100;
+    if(newFracPart > 0.99){
+        intPart++;
+        fracPart = newFracPart - 1 + fracPart;
     } else{
-        fracPart = getFracPart() + newFracPart;
+        fracPart = newFracPart;
     }
 }
 
@@ -132,8 +130,18 @@ unsigned long long int serialcurrency::size() const{ // Calcula o tamanho de um 
     return sizeof(intPart) + sizeof(fracPart);
 }
 
+double serialcurrency::getSerialCurrency(){
+    double num;
 
-string serialcurrency::getSerialCurrency() const {
-    string aux(1, getIntPart() + getFracPart());
-    return aux;
+    num = getIntPart() + getFracPart();
+
+    return num;
+}
+
+void serialcurrency::setSerialCurrency(double value){
+    double aux;
+
+    aux = modf(value, &intPart);
+
+    setFracPart(aux);
 }
