@@ -304,7 +304,7 @@ void btree<T, MIN_DEGREE>::printAux(node<T, MIN_DEGREE> x, vector<string> &v, un
     }
 
     for(i = 0; i < x.getSize(); i++){
-        auxStr += (x.getKey(i).getValue()) + ", "; // Todas as chaves são armazenadas em auxStr
+        auxStr += (x.getKey(i).getSerialCurrency()) + ", "; // Todas as chaves são armazenadas em auxStr
     }
 
     if(auxStr.length() > 1){ // auxStr é organizada

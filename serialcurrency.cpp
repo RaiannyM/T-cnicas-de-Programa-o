@@ -10,7 +10,7 @@ serialcurrency::serialcurrency() : serializable(){ // Construtor padrão
     fracPart = 0;
 }
 
-serialcurrency::serialcurrency(double value, double value2) : serializable(){ // Construtor paramétrico
+void serialcurrency::setSerialCurrency(double value){ // Construtor paramétrico
     double aux;
 
     aux = modf(value, &intPart);
@@ -120,7 +120,7 @@ string serialcurrency::toString(){ // Serialização
     return repr;
 }
 
-void serialcurrency::fromString(string repr){ // Serialização
+void serialcurrency::fromString(string repr){ // Deserialização
     int pos = 0;
 
     repr.copy(reinterpret_cast<char*>(&intPart), sizeof(intPart), pos);
@@ -130,4 +130,10 @@ void serialcurrency::fromString(string repr){ // Serialização
 
 unsigned long long int serialcurrency::size() const{ // Calcula o tamanho de um objeto da classe serialCurrency
     return sizeof(intPart) + sizeof(fracPart);
+}
+
+
+string serialcurrency::getSerialCurrency() const {
+    string aux(1, getIntPart() + getFracPart());
+    return aux;
 }

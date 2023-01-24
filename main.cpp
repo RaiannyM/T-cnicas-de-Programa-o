@@ -9,14 +9,21 @@ using namespace std;
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
-    btree<charserial, 3> disk("file.dat", "DTB", 3);
+    btree<serialcurrency, 3> disk("file.dat", "DTB", 3);
     char vetorpraInserir[20] = {')', '6', 'O', 'b', 'L', 'G', 'P', 'C', '3', '%', 'm', '(', 'H', 'W', 'Y', '&', 'k', '1', 'X', '-'};
     char vetorpraRemover[10] = {'C', 'm', '1', 'O', ')', 'W', 'Y', 'L', 'X', '('};
 
+
+
+    double inserting[21] = {5.50, 2.01, -5.33, 10.05, 21.13, 1.88, -3.14, 2.86, 37.55, 2.99, 34.31, 49.00, 38.26, 20.85, 23.02, 17.01, 14.92, 13.81, 39.89, -13.22, 7.20};
+
     charserial caractere;
-    char valor;
+    serialcurrency moeda;
+    //char valor;
     string op;
     int resp;
+
+    double valor;
 
     if(disk.isOpen()){
         do{
@@ -34,30 +41,30 @@ int main()
 
             switch(resp){
                 case 1:
-                    cout << "Digite um caractere: ";
+                    cout << "Digite um valor: ";
                     cin >> valor;
-                    caractere.setValue(valor);
-                    if(disk.insertKey(caractere)){
+                    moeda.setSerialCurrency(valor);
+                    if(disk.insertKey(moeda)){
                         disk.print();
                     }else{
-                        cout << "Não foi possível inserir o caractere!" << endl;
+                        cout << "Não foi possível inserir o valor!" << endl;
                     }
                     break;
                 case 2:
-                    cout << "Digite um character: ";
+                    cout << "Digite um valor: ";
                     cin >> valor;
-                    caractere.setValue(valor);
-                    if(disk.remove(caractere)){
+                    moeda.setSerialCurrency(valor);
+                    if(disk.remove(moeda)){
                         disk.print();
                     }else{
-                        cout << "Não foi possível remover o caractere!" << endl;
+                        cout << "Não foi possível remover o valor!" << endl;
                     }
                     break;
                 case 3:
-                    cout << "Digite um caractere: ";
+                    cout << "Digite um valor: ";
                     cin >> valor;
-                    caractere.setValue(valor);
-                    if(disk.search(caractere) >= 0){
+                    moeda.setSerialCurrency(valor);
+                    if(disk.search(moeda) >= 0){
                         cout << "O valor " << valor << " foi encontrado na árvore " << endl;
                     }else{
                         cout << "O valor " << valor << " não foi encontrado na árvore " << endl;
@@ -66,29 +73,30 @@ int main()
                 case 4:
                     disk.print();
                     break;
+
                 case 5:
                     cout << endl
                          << "----------------------Efetuando as inserções--------------------"
                          << endl;
-                    for(int i = 0; i< 20; i++){
-                        caractere.setValue(vetorpraInserir[i]);
-                        if(disk.insertKey(caractere)){
-                            cout << "Mostrando após a Inserção de: " << vetorpraInserir[i] << endl;
-                            disk.print();
-                        }
-                    }
+                    //for(int i = 0; i< 20; i++){
+                      //  caractere.setValue(vetorpraInserir[i]);
+                        //if(disk.insertKey(caractere)){
+                          //  cout << "Mostrando após a Inserção de: " << vetorpraInserir[i] << endl;
+                            //disk.print();
+                        //}
+               //     }
                     cout << endl
                          << "----------------------Efetuando as Remoções--------------------"
                          << endl;
-                    for(int i = 0; i< 10; i++){
-                        caractere.setValue(vetorpraRemover[i]);
-                        if(disk.remove(caractere)){
-                            cout << "Mostrando após a Remoção de: "<< vetorpraRemover[i] << endl;
-                            disk.print();
-                        }
-                    }
+                    //for(int i = 0; i< 10; i++){
+                      //  caractere.setValue(vetorpraRemover[i]);
+                        //if(disk.remove(caractere)){
+                          //  cout << "Mostrando após a Remoção de: "<< vetorpraRemover[i] << endl;
+                            //disk.print();
+                   //     }
+                 //   }
                     break;
-                case 6:
+                 case 6:
                     cout << "Encerrando o programa... ";
                     disk.close();
                     cout << "Concluído! " << endl;

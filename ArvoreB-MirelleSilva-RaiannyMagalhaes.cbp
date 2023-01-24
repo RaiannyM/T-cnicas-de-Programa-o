@@ -32,7 +32,18 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="btree.h" />
+		<Unit filename="charserial.cpp" />
+		<Unit filename="charserial.h" />
+		<Unit filename="header.cpp" />
+		<Unit filename="header.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="node.h" />
+		<Unit filename="record.h" />
+		<Unit filename="serialcurrency.cpp" />
+		<Unit filename="serialcurrency.h" />
+		<Unit filename="serializable.h" />
+		<Unit filename="typedfile.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -35,36 +35,3 @@ class charserial : serializable {
 
 
 #endif // CHARSERIAL_H_INCLUDED
-
-/*#ifndef CHARSERIAL_H_INCLUDED
-#define CHARSERIAL_H_INCLUDED
-#include "serializable.h"
-class charserial : serializable {
-    public:
-        charserial();
-        charserial(char c);
-        charserial(const charserial& other);
-        //charserial operator=(const charserial& other);
-        bool operator==(const charserial &other) const;
-        bool operator<(const charserial &other) const;
-        bool operator<=(const charserial &other) const;
-        bool operator>(const charserial &other) const;
-        bool operator >=(const charserial &other) const;
-        bool operator!=(const charserial &other) const;
-        void setValue(char c);
-        string getValue() const;
-        char lowCase(const char c) const;
-        char upperCase(const char c) const;
-        string toString();
-        void fromString(string repr);
-        string toXML();
-        void fromXXL(string repr);
-        string toCSV();
-        void fromCSV(string repr);
-        string toJSON();
-        void fromJSON(string repr);
-        unsigned long long int size() const;
-    protected:
-        char value;
-};
-#endif // CHARSERIAL_H_INCLUDED*/

@@ -10,7 +10,7 @@ class serialcurrency : serializable{
         double fracPart; // fracPart é o atributo que refere-se a parte fracionária do valor
     public:
         serialcurrency(); // Construtor padrão
-        serialcurrency(double value, double value2); // Construtor paramétrico
+        void setSerialCurrency(double value); // Construtor paramétrico
         serialcurrency(const serialcurrency& other); // Construtor de cópia
         virtual ~serialcurrency(); // Destrutor
         serialcurrency operator=(const serialcurrency& other); // Sobrecarga do operador =
@@ -30,6 +30,7 @@ class serialcurrency : serializable{
             os << fixed << setprecision(2) << sc.intPart + sc.fracPart;
             return os;
         }
+        string getSerialCurrency() const;
         // *** Não implementados
         virtual string toXML(){ return ""; };
         virtual void fromXML(string repr){};
