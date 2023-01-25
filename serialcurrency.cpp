@@ -1,6 +1,8 @@
 #include "serialcurrency.h"
 #include <iostream>
 #include <iomanip>
+#include <string>
+#include <sstream>
 #include <math.h>
 
 using namespace std;
@@ -130,12 +132,16 @@ unsigned long long int serialcurrency::size() const{ // Calcula o tamanho de um 
     return sizeof(intPart) + sizeof(fracPart);
 }
 
-double serialcurrency::getSerialCurrency(){
-    double num;
+string serialcurrency::getValue() const{
+    double num = intPart + fracPart;
 
-    num = getIntPart() + getFracPart();
+    stringstream stream;
 
-    return num;
+    stream << std::fixed << std::setprecision(2) << num;
+
+    string aux = stream.str();
+
+    return aux;
 }
 
 void serialcurrency::setSerialCurrency(double value){

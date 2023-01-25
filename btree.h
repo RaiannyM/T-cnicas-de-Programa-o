@@ -306,12 +306,11 @@ void btree<T, MIN_DEGREE>::printAux(node<T, MIN_DEGREE> x, vector<string> &v, un
     for(i = 0; i < x.getSize(); i++){
         double aux;
 
-        auxStr += auxNum; // Todas as chaves são armazenadas em auxStr
-        cout << ", ";
+        auxStr += x.getKey(i).getValue() + ", "; // Todas as chaves são armazenadas em auxStr
     }
 
     if(auxStr.length() > 1){ // auxStr é organizada
-        auxStr += "\b\b]";
+        auxStr +=  "\b\b]";
     } else{
         auxStr += "]";
     }

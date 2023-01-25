@@ -31,7 +31,7 @@ class serialcurrency : serializable{
             return os;
         }
         void setSerialCurrency(double value);
-        double getSerialCurrency();
+        string getValue() const;
         // *** Não implementados
         virtual string toXML(){ return ""; };
         virtual void fromXML(string repr){};

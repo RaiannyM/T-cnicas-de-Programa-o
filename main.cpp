@@ -15,24 +15,34 @@ int main()
 
 
 
-    double inserting[21] = {5.50, 2.01, -5.33, 10.05, 21.13, 1.88, -3.14, 2.86, 37.55, 2.99, 34.31, 49.00, 38.26, 20.85, 23.02, 17.01, 14.92, 13.81, 39.89, -13.22, 7.20};
+   // double inserting[21] = {5.50, 2.01, -5.33, 10.05, 21.13, 1.88, -3.14, 2.86, 37.55, 2.99, 34.31, 49.00, 38.26, 20.85, 23.02, 17.01, 14.92, 13.81, 39.89, -13.22, 7.20};
 
     charserial caractere;
-    serialcurrency moeda;
+    serialcurrency moeda(3.45), moeda2(4.56), moeda3(5.76), moeda4(6.78), moeda5(10.90), moeda6(4.50);
     //char valor;
     string op;
     int resp;
 
-    double valor;
+    if(disk.isOpen()){
+        disk.insertKey(moeda);
+        disk.insertKey(moeda2);
+        disk.insertKey(moeda3);
+        disk.insertKey(moeda4);
+        disk.insertKey(moeda5);
+        disk.insertKey(moeda6);
+        disk.print();
+    }
 
+    disk.close();
+/*
     if(disk.isOpen()){
         do{
             cout << "--------------------------\n"
                  << "Árvore B em Disco\n"
                  << "Selecione uma opção:\n\n"
-                 << "1. Inserir um caractere\n"
-                 << "2. Remover um caractere\n"
-                 << "3. Pesquisar um caractere\n"
+                 << "1. Inserir um valor\n"
+                 << "2. Remover um valor\n"
+                 << "3. Pesquisar um valor\n"
                  << "4. Imprimir árvore\n"
                  << "5. Teste automatizado\n"
                  << "6. Sair\n\n"
@@ -43,7 +53,7 @@ int main()
                 case 1:
                     cout << "Digite um valor: ";
                     cin >> valor;
-                    moeda.setSerialCurrency(valor);
+
                     if(disk.insertKey(moeda)){
                         disk.print();
                     }else{
@@ -108,10 +118,7 @@ int main()
             }
     } while(true);
     }else{
-        cout << "Verifique se: " << endl
-             << "- As versões entre o arquivo e a informada batem" << endl
-             << "- O grau da árvore é o mesmo que a versão" << endl
-             << "- Caso o grau da árvore não seja o mesmo que a versão, por favor, forneça um arquivo com grau = ver" << endl;
-    }
+        cerr << "Não foi possível abrir o arquivo! << endl;
+    }*/
     return 0;
 }
