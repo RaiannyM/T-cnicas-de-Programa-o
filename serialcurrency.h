@@ -30,8 +30,8 @@ class serialcurrency : serializable{
             os << fixed << setprecision(2) << sc.intPart + sc.fracPart;
             return os;
         }
-        void setSerialCurrency(double value);
-        string getValue() const;
+        void setSerialCurrency(double value); // Estabelece o valor total, similar ao construtor paramétrico
+        string getValue() const; // Retorna o valor total (soma entre a parte inteira e a parte fracionária)
         // *** Não implementados
         virtual string toXML(){ return ""; };
         virtual void fromXML(string repr){};

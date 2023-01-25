@@ -1,3 +1,8 @@
+/* Trabalho - Árvore B
+   Nome: Mirelle Silva Vieira, RA: 0059636
+   Nome: Raianny Magalhães Silva, RA: 0022116
+*/
+
 #ifndef BTREE_H_INCLUDED
 #define BTREE_H_INCLUDED
 
@@ -29,14 +34,6 @@ class btree : private typedFile <T, MIN_DEGREE>{
         bool insertKey(T key); // Método que realiza a inserção da chave em uma página da árvore
         bool insertNonFull(node<T, MIN_DEGREE>& node, T key, unsigned int index); // Método que auxilia na inserção
         bool remove(T key); // Método que realiza a remoção de uma chave em uma página da árvore
-        bool removeAux(node<T, MIN_DEGREE> x, T key, unsigned int indexOfX);
-        bool removeFromLeaf(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
-        bool removeFromNonLeaf(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
-        T findPred(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
-        T findSuc(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
-        bool goDownAndOrganize(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
-        void merge(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX);
-        void rotateKey(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX, bool direction);
         unsigned int hasKey(node<T, MIN_DEGREE> x, T key);
         node<T, MIN_DEGREE> readNode(unsigned int i);
         bool insertRoot(node<T, MIN_DEGREE> new_node);
@@ -65,7 +62,7 @@ void btree<T, MIN_DEGREE>::close(){ // Método que irá fechar o arquivo
     typedFile<T, MIN_DEGREE>::close();
 }
 
-template <class T, const unsigned int MIN_DEGREE>
+template <class T, const unsigned int MIN_DEGREE> // Método auxiliar que irá ler uma página
 node<T, MIN_DEGREE> btree<T, MIN_DEGREE>::readNode(unsigned int index){
     record<T, MIN_DEGREE> rec;
 
@@ -107,7 +104,7 @@ int btree<T, MIN_DEGREE>::searchAux(node<T, MIN_DEGREE> rec, T key){ // Método 
     }
 }
 
-template <class T, const unsigned int MIN_DEGREE>
+template <class T, const unsigned int MIN_DEGREE> // Método auxiliar que irá realizar a inserção da chave na raíz
 bool btree<T, MIN_DEGREE>::insertRoot(node<T, MIN_DEGREE> new_node){
     record<T, MIN_DEGREE> new_rec;
 
@@ -259,7 +256,7 @@ void btree<T, MIN_DEGREE>::setRoot(node<T, MIN_DEGREE> new_root){ // Modificador
     root = new_root;
 }
 
-template <class T, const unsigned int MIN_DEGREE>
+template <class T, const unsigned int MIN_DEGREE> // Método que irá realizar a inserção de uma chave em uma página
 bool btree<T, MIN_DEGREE>::writeNode(node<T, MIN_DEGREE> x, unsigned long long int index, bool recent){
     record<T, MIN_DEGREE> rec;
 
@@ -320,64 +317,9 @@ void btree<T, MIN_DEGREE>::printAux(node<T, MIN_DEGREE> x, vector<string> &v, un
 
 template <class T, const unsigned int MIN_DEGREE>
 bool btree<T, MIN_DEGREE>::remove(T key){
-    bool removido = false;
-
     node<T, MIN_DEGREE> root = getRoot();
 
     if(root.getSize() == 0){
-        return removido;
-    }
-
-    removido = removeAux(root, key, typedFile<T, MIN_DEGREE>::getFirstValid());
-
-    setRoot(readNode(typedFile<T, MIN_DEGREE>::getFirstValid()));
-
-    root = getRoot();
-
-    if(root.getSize() == 0 && !root.isLeaf()){
-        node<T, MIN_DEGREE> oldRoot = root;
-
-        unsigned int oldRootIndex = typedFile<T, MIN_DEGREE>::getFirstValid();
-
-        typedFile<T, MIN_DEGREE>::setFirstValid(root.getChild(0));
-
-        setRoot(readNode(root.getChild(0)));
-
-        return deleteNode(oldRoot, oldRootIndex);
-    }
-    return removido;
-}
-
-template <class T, const unsigned int MIN_DEGREE>
-bool btree<T, MIN_DEGREE>::removeAux(node<T, MIN_DEGREE> x, T key, unsigned int indexOfX){
-    unsigned int index = hasKey(x, key);
-
-    if(index < x.getSize() && x.getKey(index) == key){
-        if(x.isLeaf()){
-            return removeFromLeaf(x, index, indexOfX);
-        } else{
-            return removeFromNonLeaf(x, index, indexOfX);
-        }
-    } else if(!x.isLeaf()){
-        node<T, MIN_DEGREE> child;
-
-        bool ultimoFilhoFoiAgrupado = ((index == x.getSize())? true : false);
-
-        child = readNode(x.getChild(index));
-
-        if(child.getSize() < MIN_DEGREE){
-            goDownAndOrganize(x, index, indexOfX);
-            x = readNode(indexOfX);
-        }
-
-        if(ultimoFilhoFoiAgrupado && index > x.getSize()){
-            child = readNode(x.getChild(index - 1));
-            return removeAux(child, key, x.getChild(index));
-        } else{
-            child = readNode(x.getChild(index));
-            return removeAux(child, key, x.getChild(index));
-        }
-    } else{
         return false;
     }
 }
@@ -391,287 +333,6 @@ unsigned int btree<T, MIN_DEGREE>::hasKey(node<T, MIN_DEGREE> x, T key){
     }
 
     return index;
-}
-
-template <class T, const unsigned int MIN_DEGREE>
-bool btree<T, MIN_DEGREE>::goDownAndOrganize(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX){
-    node<T, MIN_DEGREE> childAux;
-
-    if(index != 0){
-        childAux = readNode(x.getChild(index - 1));
-
-        if(childAux.getSize() >= MIN_DEGREE){
-            rotateKey(x, index, indexOfX, false);
-            return true;
-        }
-    }
-
-    if(index != x.getSize()){
-        childAux = readNode(x.getChild(index + 1));
-
-        if(childAux.getSize() >= MIN_DEGREE){
-            rotateKey(x, index, indexOfX, true);
-            return true;
-        }
-    }
-
-    if(index != x.getSize()){
-        merge(x, index, indexOfX);
-        return true;
-    } else{
-        merge(x, index - 1, indexOfX);
-        return true;
-    }
-}
-
-template <class T, const unsigned int MIN_DEGREE>
-void btree<T, MIN_DEGREE>::rotateKey(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX, bool direction){
-    unsigned int i;
-    if(direction){
-        node<T, MIN_DEGREE> child, right;
-
-        child = readNode(x.getChild(index));
-        right = readNode(x.getChild(index + 1));
-
-        child.setKey(child.getSize(), x.getKey(index));
-
-        if(!child.isLeaf()){
-            child.setChild(child.getSize() + 1, right.getChild(0));
-        }
-
-        x.setKey(index, right.getKey(0));
-
-        for(i = 1; i < right.getSize(); i++){
-            right.setKey(i - 1, right.getKey(i));
-        }
-
-        if(!right.isLeaf()){
-            for(i = 1; i <= right.getSize(); i++){
-                right.setChild(i - 1, right.getChild(i));
-            }
-        }
-
-        child.setSize(child.getSize() + 1);
-        right.setSize(right.getSize() - 1);
-
-        writeNode(x, indexOfX, false);
-        writeNode(right, x.getChild(index + 1), false);
-        writeNode(child, x.getChild(index), false);
-
-        return;
-    } else{
-        node<T, MIN_DEGREE> child, left;
-
-        child = readNode(x.getChild(index));
-        left = readNode(x.getChild(index - 1));
-
-        for(i = child.getSize() - 1; i >= 0; i--){
-            child.setKey(i + 1, child.getKey(i));
-            if(i == 0){
-                break;
-            }
-        }
-
-        if(!child.isLeaf()){
-            for(i = child.getSize(); i >= 0; i--){
-                child.setChild(i + 1, child.getChild(i));
-                if(i == 0){
-                    break;
-                }
-            }
-        }
-
-        child.setKey(0, x.getKey(index - 1));
-
-        if(!child.isLeaf()){
-            child.setChild(0, left.getChild(left.getSize()));
-        }
-
-        x.setKey(index - 1, left.getKey(left.getSize() - 1));
-
-        child.setSize(child.getSize() + 1);
-        left.setSize(left.getSize() - 1);
-
-        writeNode(x, indexOfX, false);
-        writeNode(left, x.getChild(index - 1), false);
-        writeNode(child, x.getChild(index), false);
-    }
-}
-
-template <class T, const unsigned int MIN_DEGREE>
-void btree<T, MIN_DEGREE>::merge(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX){
-    node<T, MIN_DEGREE> childLeft, childRight;
-    int indexChildRight;
-    unsigned int i;
-
-    indexChildRight = x.getChild(index + 1);
-
-    childLeft = readNode(x.getChild(index));
-    childRight = readNode(x.getChild(index + 1));
-
-    childLeft.setKey(childLeft.MIN, x.getKey(index));
-
-    for(i = 0; i < childRight.getSize(); i++){
-        childLeft.setKey(i + MIN_DEGREE, childRight.getKey(i));
-    }
-
-    if(!childLeft.isLeaf()){
-        for(i = 0; i <= childRight.getSize(); i++){
-            childLeft.setChild(i + MIN_DEGREE, childRight.getChild(i));
-        }
-    }
-
-    for(i = index + 1; i < x.getSize(); i++){
-        x.setKey(i - 1, x.getKey(i));
-    }
-
-    for(i = index + 2; i <= x.getSize(); i++){
-        x.setChild(i - 1, x.getChild(i));
-    }
-
-    childLeft.setSize(childLeft.getSize() + 1 + childRight.getSize());
-    x.setSize(x.getSize() - 1);
-
-    writeNode(childLeft, x.getChild(index), false);
-    writeNode(x, indexOfX, false);
-    deleteNode(childRight, indexChildRight);
-
-    return;
-}
-
-template <class T, const unsigned int MIN_DEGREE>
-T btree<T, MIN_DEGREE>::findPred(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX){
-    node<T, MIN_DEGREE> child;
-    child = readNode(x.getChild(index));
-    T key;
-
-    bool ultimoFilhoFoiAgrupado = ((index == x.getSize())? true : false);
-
-    if(child.getSize() < MIN_DEGREE){
-        goDownAndOrganize(x, index, indexOfX);
-        child = readNode(x.getChild(index));
-    }
-
-    if(ultimoFilhoFoiAgrupado && index > x.getSize()){
-        indexOfX = x.getChild(index - 1);
-    } else{
-        indexOfX = x.getChild(index);
-    }
-
-    while(!child.isLeaf()){
-        node<T, MIN_DEGREE> aux = readNode(child.getChild(child.getSize()));
-        unsigned int idx = child.getSize();
-
-        if(aux.getSize() < MIN_DEGREE){
-            goDownAndOrganize(child, child.getSize(), indexOfX);
-            child = readNode(indexOfX);
-            aux = readNode(child.getChild(child.getSize()));
-        }
-
-        if(idx > child.getSize()){
-            indexOfX = child.getChild(idx - 1);
-        } else{
-            indexOfX = child.getChild(idx);
-        }
-        child = aux;
-    }
-
-    child = readNode(indexOfX);
-
-    key = child.getKey(child.getSize() - 1);
-
-    removeFromLeaf(child, child.getSize() - 1, indexOfX);
-
-    return key;
-}
-
-template <class T, const unsigned int MIN_DEGREE>
-T btree<T, MIN_DEGREE>::findSuc(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX){
-    node<T, MIN_DEGREE> child;
-    child = readNode(x.getChild(index + 1));
-
-    bool ultimoFilhoFoiAgrupado = (((index + 1) == x.getSize()) ? true: false);
-
-    if(child.getSize() < MIN_DEGREE){
-        goDownAndOrganize(x, index+ 1, indexOfX);
-        child = readNode(x.getChild(index + 1));
-    }
-
-    if(ultimoFilhoFoiAgrupado && index > x.getSize()){
-        indexOfX = x.getChild(index);
-    } else{
-        indexOfX = x.getChild(index + 1);
-    }
-
-    while(!child.isLeaf()){
-        node<T, MIN_DEGREE> aux;
-
-        aux = readNode(child.getChild(0));
-
-        unsigned int idx = 0;
-
-        if(aux.getSize() < MIN_DEGREE){
-            goDownAndOrganize(child, 0, indexOfX);
-            child = readNode(indexOfX);
-            aux = readNode(child.getChild(0));
-        }
-
-        indexOfX = child.getChild(idx);
-        child = aux;
-    }
-
-    T key;
-    child = readNode(indexOfX);
-    key = child.getKey(0);
-    removeFromLeaf(child, 0, indexOfX);
-
-    return key;
-}
-
-template <class T, const unsigned int MIN_DEGREE>
-bool btree<T, MIN_DEGREE>::removeFromLeaf(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX){
-    unsigned int i;
-
-    for(i = index; i < x.getSize() - 1; i++){
-        x.setKey(i, x.getKey(i + 1));
-    }
-    x.setSize(x.getSize() - 1);
-
-    return writeNode(x, indexOfX, false);
-}
-
-template <class T, const unsigned int MIN_DEGREE>
-bool btree<T, MIN_DEGREE>::removeFromNonLeaf(node<T, MIN_DEGREE> x, unsigned int index, unsigned int indexOfX){
-    T key;
-    key = x.getKey(index);
-    node<T, MIN_DEGREE> childLeft, childRight;
-
-    childLeft = readNode(x.getChild(index));
-    childRight = readNode(x.getChild(index + 1));
-
-    if(childLeft.getSize() >= MIN_DEGREE){
-        T pred;
-
-        pred = findPred(x, index, indexOfX);
-
-        x.setKey(index, pred);
-
-        return writeNode(x, indexOfX, false);
-    } else if(childRight.getSize() >= MIN_DEGREE){
-        T suc;
-
-        suc = findSuc(x, index, indexOfX);
-
-        x.setKey(index, suc);
-
-        return writeNode(x, indexOfX, false);
-    } else{
-        merge(x, index, indexOfX);
-
-        childLeft = readNode(x.getChild(index));
-
-        return removeAux(childLeft, key, x.getChild(index));
-    }
 }
 
 template <class T, const unsigned int MIN_DEGREE>

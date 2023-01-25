@@ -1,3 +1,8 @@
+/* Trabalho - Árvore B
+   Nome: Mirelle Silva Vieira, RA: 0059636
+   Nome: Raianny Magalhães Silva, RA: 0022116
+*/
+
 #include <iostream>
 #include "btree.h"
 #include "charserial.h"
@@ -15,7 +20,7 @@ int main()
 
 
 
-   // double inserting[21] = {5.50, 2.01, -5.33, 10.05, 21.13, 1.88, -3.14, 2.86, 37.55, 2.99, 34.31, 49.00, 38.26, 20.85, 23.02, 17.01, 14.92, 13.81, 39.89, -13.22, 7.20};
+    //double inserting[21] = {5.50, 2.01, -5.33, 10.05, 21.13, 1.88, -3.14, 2.86, 37.55, 2.99, 34.31, 49.00, 38.26, 20.85, 23.02, 17.01, 14.92, 13.81, 39.89, -13.22, 7.20};
 
     charserial caractere;
     serialcurrency moeda(3.45), moeda2(4.56), moeda3(5.76), moeda4(6.78), moeda5(10.90), moeda6(4.50);

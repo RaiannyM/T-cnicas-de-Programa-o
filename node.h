@@ -1,3 +1,8 @@
+/* Trabalho - Árvore B
+   Nome: Mirelle Silva Vieira, RA: 0059636
+   Nome: Raianny Magalhães Silva, RA: 0022116
+*/
+
 #ifndef NODE_H_INCLUDED
 #define NODE_H_INCLUDED
 

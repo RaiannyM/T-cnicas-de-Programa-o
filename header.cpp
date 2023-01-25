@@ -1,3 +1,8 @@
+/* Trabalho - Árvore B
+   Nome: Mirelle Silva Vieira, RA: 0059636
+   Nome: Raianny Magalhães Silva, RA: 0022116
+*/
+
 #include "header.h"
 
 header::header() : serializable() { // Construtor padrão
